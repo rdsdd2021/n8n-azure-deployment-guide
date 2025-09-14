@@ -1,11 +1,11 @@
-● 💰 Azure Container Apps Usage Limits & Cost Analysis
+● 💰 Azure Container Apps Usage Limits & Cost Analysis (Updated - Current Working Config)
 
   🆓 Always Free Tier Limits (Per Month)
 
 ● | Resource      | Free Tier Limit    | Your Configuration                         |
   |---------------|--------------------|--------------------------------------------|
   | Requests      | 2,000,000/month    | Unlimited within limit                     |
-  | Compute Time  | 400,000 GB-seconds | 0.5 vCPU × 1GB = 0.5 GB-seconds per second |
+  | Compute Time  | 180,000 vCPU-sec   | 0.25 vCPU × 0.5GB (scale-to-zero enabled)  |
   | Bandwidth     | First 100GB free   | Covers typical usage                       |
   | Log Analytics | First 5GB/month    | Minimal logs expected                      |
 
@@ -20,7 +20,7 @@
 
   Monthly Consumption:
   - Requests: ~5,000/month (0.25% of limit)
-  - Compute: ~15,000 GB-seconds (3.75% of limit)
+  - Compute: ~5,000 vCPU-seconds (3% of limit)
   - Scale-to-Zero: 23.5 hours/day inactive
   - Monthly Cost: $0 ✅
 
@@ -34,8 +34,8 @@
 
   Monthly Consumption:
   - Requests: ~25,000/month (1.25% of limit)
-  - Compute: ~180,000 GB-seconds (45% of limit)
-  - Always-on time: 4-6 hours/day
+  - Compute: ~50,000 vCPU-seconds (28% of limit)
+  - Active time: 4-6 hours/day (GitHub Actions keep-alive)
   - Monthly Cost: $0 ✅
 
   Scenario 3: Heavy Daily Usage 🚀
@@ -48,19 +48,19 @@
 
   Monthly Consumption:
   - Requests: ~60,000/month (3% of limit)
-  - Compute: ~350,000 GB-seconds (87.5% of limit)
-  - Always-on time: 8+ hours/day
-  - Monthly Cost: $0-5 ⚠️
+  - Compute: ~120,000 vCPU-seconds (67% of limit)
+  - Active time: 8+ hours/day
+  - Monthly Cost: $0 ✅ (still within free tier)
 
   💸 Potential Monthly Costs Breakdown
 
 ● | Component      | Free Tier   | Overage Cost          | Your Risk |
   |----------------|-------------|-----------------------|-----------|
-  | Container Apps | 400K GB-sec | $0.000024/GB-sec      | Very Low  |
+  | Container Apps | 180K vCPU-sec | $0.000024/vCPU-sec    | Very Low  |
   | Requests       | 2M requests | $0.0000024/request    | Very Low  |
   | Log Analytics  | 5GB         | $2.30/GB              | Low       |
   | Bandwidth      | 100GB       | $0.05/GB              | Very Low  |
-  | Supabase       | 500MB DB    | $25/month (paid tier) | Medium    |
+  | Neon Database  | 0.5GB + 100h | $19/month (paid tier)  | Low       |
 
   🎯 Realistic Monthly Bill Estimates
 
@@ -69,16 +69,17 @@
   - Container Apps: $0 (within free tier)
   - Log Analytics: $0-2 (minimal logs)
   - Bandwidth: $0 (well within 100GB limit)
-  - Supabase: $0 (within 500MB limit)
+  - Neon Database: $0 (within 0.5GB + 100h limit)
+  - GitHub Actions: $0 (within 2000 minutes limit)
   - Total Monthly: $0-2 🎉
 
   Heavy Usage Scenario (5% of users):
 
-  - Container Apps: $0-5 (if exceeding 400K GB-seconds)
+  - Container Apps: $0-5 (if exceeding 180K vCPU-seconds)
   - Log Analytics: $2-5 (detailed logging)
   - Bandwidth: $0-5 (if heavy data transfer)
-  - Supabase: $0-25 (if exceeding 500MB storage)
-  - Total Monthly: $2-35 ⚠️
+  - Neon Database: $0-19 (if exceeding 0.5GB or 100h)
+  - Total Monthly: $2-30 ⚠️
 
   🔍 What Uses Your Resources?
 
@@ -98,13 +99,14 @@
 
   🛡️ Cost Optimization Strategies
 
-● 1. Optimize Container Configuration
+● 1. Current Optimized Configuration ✅
 
-  # Keep current optimal settings
-  CPU: 0.5 (minimum for good performance)
-  Memory: 1Gi (sufficient for most workflows)
+  # Already optimized for $0 cost
+  CPU: 0.25 (sufficient for most workflows)
+  Memory: 0.5Gi (optimized for free tier)
   Min Replicas: 0 (scale-to-zero enabled)
   Max Replicas: 1 (prevents unexpected scaling costs)
+  Keep-Alive: GitHub Actions (smart pinging)
 
   2. Monitor Resource Usage
 
@@ -119,11 +121,13 @@
   - Optimize Workflow Logic to reduce execution time
   - Use Webhooks instead of continuous monitoring
 
-  4. Database Management
+  4. Database Management (Neon)
 
   - Regular Cleanup: Remove old workflow executions
   - Optimize Queries: Use efficient workflow designs
-  - Monitor Storage: Keep under 500MB Supabase limit
+  - Monitor Storage: Keep under 0.5GB Neon limit
+  - Monitor Compute: Keep under 100 hours/month
+  - Auto-hibernation: Neon hibernates inactive databases
 
   📈 Usage Monitoring Commands
 
@@ -183,9 +187,10 @@
   - 2% chance: $5-25 (heavy usage or Supabase upgrade)
 
   Key factors that keep costs low:
-  ✅ Scale-to-zero configuration
-  ✅ Efficient resource allocation (0.5 CPU, 1GB RAM)
+  ✅ Scale-to-zero configuration with smart keep-alive
+  ✅ Efficient resource allocation (0.25 CPU, 0.5GB RAM)
+  ✅ GitHub Actions keep-alive (prevents cold starts)
+  ✅ Neon database with auto-hibernation
   ✅ Free tier limits are generous for personal/small business use
-  ✅ Supabase free tier (500MB) sufficient for most n8n installations
 
   Monitor monthly and you should stay within free limits for typical daily usage! 🎯
