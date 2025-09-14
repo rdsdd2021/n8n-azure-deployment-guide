@@ -2,10 +2,10 @@ name: N8N Keep Alive
 
 on:
   schedule:
-    # Every 15 minutes during working hours (Mon-Fri, 9 AM - 6 PM UTC)
-    - cron: '*/15 9-18 * * 1-5'
-    # Every 2 hours during off-hours and weekends
-    - cron: '0 */2 * * *'
+    # Every 15 minutes from 12 PM to 5 PM IST (Mon-Sat)
+    - cron: '*/15 6-11 * * 1-6'
+    # Every 15 minutes from 11 AM to 1 AM IST (Sun)
+    - cron: '*/15 5-19 * * 0'
   workflow_dispatch: # Allow manual trigger
 
 jobs:
